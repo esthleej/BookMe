@@ -9,9 +9,13 @@ import { BooksContext } from '../../providers/BooksProvider';
 
 const Table = ({ title, table, setTable, tableSetting, type }) => {
   const location = useLocation();
-  const { setType, setBookDetail, editList, deleteList } = useContext(
-    BooksContext
-  );
+  const {
+    setType,
+    setBookDetail,
+    editList,
+    deleteList,
+    setBookDetailVisibility,
+  } = useContext(BooksContext);
 
   useEffect(() => {
     setType(location.pathname);
@@ -30,6 +34,7 @@ const Table = ({ title, table, setTable, tableSetting, type }) => {
           thumbnail = false;
         }
         setBookDetail({ ...volumeInfo, thumbnail, selfLink });
+        setBookDetailVisibility(true);
       })
       .catch((err) => console.error(err));
   };
@@ -60,6 +65,7 @@ const Table = ({ title, table, setTable, tableSetting, type }) => {
         options={{
           exportButton: true,
           actionsColumnIndex: -1,
+          loadingType: 'linear',
           // showTitle: false,
         }}
         actions={[
