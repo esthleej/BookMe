@@ -1,5 +1,6 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import { UserContext } from './UserProvider';
+import SNACKBAR from '../component/SnackBar/snackbarMessages';
 import {
   subscribeBooks,
   addBook,
@@ -16,8 +17,6 @@ const BooksProvider = ({ children }) => {
   const { user } = useContext(UserContext);
   const [readingLog, setReadingLog] = useState([]);
   const [wishList, setWishList] = useState([]);
-  // const [error, setError] = useState(false);
-  // const [loading, setLoading] = useState(true);
   const [bookDetail, setBookDetail] = useState(null);
   const [isBookDetail, setBookDetailVisibility] = useState(false);
   const [snackbar, setSnackbar] = useState('');
@@ -39,15 +38,16 @@ const BooksProvider = ({ children }) => {
         uid
       );
     }
-    if (user) {
+    if (user && uid) {
       suscribeFromFirestore();
     }
     return () => {
       if (unsubscribeFromFirestore) {
         unsubscribeFromFirestore();
+        console.log('unsubscribe');
       }
     };
-  }, [user, setReadingLog, setWishList, uid]);
+  }, [user, uid]);
 
   const addReadingLog = async () => {
     const newBook = {
@@ -57,27 +57,21 @@ const BooksProvider = ({ children }) => {
       startDate: new Date(),
       endDate: '',
       selfLink,
-      userId: uid,
     };
     if (user) {
-      await addBook('readingLog', newBook);
-      setBookDetail(null);
-      setBookDetailVisibility(false);
-      setSnackbar({
-        message: 'Success! Your book was saved to your reading logs!',
-        type: 'success',
-      });
-      setSnackbarVisibility(true);
+      try {
+        await addBook('readingLog', { ...newBook, userId: uid });
+        setSnackbar(SNACKBAR.ADD_TO_READING_LOGS.SUCCESS);
+      } catch (error) {
+        // setSnackbar(SNACKBAR.ADD_TO_READING_LOGS.ERROR);
+      }
     } else {
-      setReadingLog([...readingLog, { ...newBook }]);
-      setBookDetail(null);
-      setBookDetailVisibility(false);
-      setSnackbar({
-        message: 'Success! Create an account to save your log!',
-        type: 'success',
-      });
-      setSnackbarVisibility(true);
+      setReadingLog([...readingLog, newBook]);
+      setSnackbar(SNACKBAR.CREATE_ACCOUNT_TO_SAVE.SUCCESS);
     }
+    setBookDetail(null);
+    setBookDetailVisibility(false);
+    setSnackbarVisibility(true);
   };
 
   const addWishList = async () => {
@@ -87,27 +81,21 @@ const BooksProvider = ({ children }) => {
       authors: authors[0],
       genre: categories[0],
       selfLink,
-      userId: uid,
     };
     if (user) {
-      await addBook('wishList', newBook);
-      setBookDetail(null);
-      setBookDetailVisibility(false);
-      setSnackbar({
-        message: 'Success! Your book was saved to your wishlist!',
-        type: 'success',
-      });
-      setSnackbarVisibility(true);
+      try {
+        await addBook('wishList', { ...newBook, userId: uid });
+        setSnackbar(SNACKBAR.ADD_TO_WISH_LIST.SUCCESS);
+      } catch (error) {
+        // setSnackbar(SNACKBAR.ADD_TO_WISH_LIST.ERROR);
+      }
     } else {
-      setWishList([...wishList, { ...newBook }]);
-      setBookDetail(null);
-      setBookDetailVisibility(false);
-      setSnackbar({
-        message: 'Success! Create an account to save your log!',
-        type: 'success',
-      });
-      setSnackbarVisibility(true);
+      setWishList([...wishList, newBook]);
+      setSnackbar(SNACKBAR.CREATE_ACCOUNT_TO_SAVE.SUCCESS);
     }
+    setBookDetail(null);
+    setBookDetailVisibility(false);
+    setSnackbarVisibility(true);
   };
 
   const moveWishToRead = async () => {
@@ -118,32 +106,27 @@ const BooksProvider = ({ children }) => {
       endDate: '',
       genre: categories[0],
       selfLink,
-      userId: uid,
     };
     if (user) {
-      await addBook('readingLog', newBook);
-      moveBook(selfLink);
-      setBookDetail(null);
-      setBookDetailVisibility(false);
-      setSnackbar({
-        message: 'Success! Your book was moved to reading logs!',
-        type: 'success',
-      });
-      setSnackbarVisibility(true);
+      try {
+        await addBook('readingLog', { ...newBook, userId: uid });
+        moveBook(selfLink);
+
+        setSnackbar(SNACKBAR.MOVE_TO_READING_LOGS.SUCCESS);
+      } catch {
+        // setSnackbar(SNACKBAR.MOVE_TO_READING_LOGS.ERROR);
+      }
     } else {
       const newList = wishList.filter((item) => {
         return item.selfLink !== selfLink;
       });
       setReadingLog([...readingLog, newBook]);
       setWishList(newList);
-      setBookDetail(null);
-      setBookDetailVisibility(false);
-      setSnackbar({
-        message: 'Success! Create an account to save your log!',
-        type: 'success',
-      });
-      setSnackbarVisibility(true);
+      setSnackbar(SNACKBAR.CREATE_ACCOUNT_TO_SAVE.SUCCESS);
     }
+    setBookDetail(null);
+    setBookDetailVisibility(false);
+    setSnackbarVisibility(true);
   };
 
   const editList = (type, oldData, newData, setTable, table) => {
