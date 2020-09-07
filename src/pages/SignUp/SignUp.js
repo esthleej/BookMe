@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link as RouterLink, useHistory, useLocation } from 'react-router-dom';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
@@ -13,13 +13,15 @@ import Typography from '@material-ui/core/Typography';
 import { Button } from '@material-ui/core';
 import Divider from '@material-ui/core/Divider';
 
-import { signUpUserWithEmailAndPassword } from '../../firebase';
+import { auth, signInWithGoogle } from '../../firebase';
 
 import Link from '@material-ui/core/Link';
+import { UserContext } from '../../providers/UserProvider';
 
-const SignUp = ({ user }) => {
+const SignUp = () => {
   const classes = useStyles();
   const history = useHistory();
+  const { user } = useContext(UserContext);
   let location = useLocation();
   const [values, setValues] = useState({
     password: '',
@@ -56,30 +58,39 @@ const SignUp = ({ user }) => {
     const isPasswordStrong = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(
       values.password
     );
-    if (!isPasswordStrong) {
-      setPasswordValidateError('Password is not strong enough.');
-    }
-    if (values.email === '') {
-      setEmailValidateError('Email cannot be empty.');
-    }
-    if (values.password === '') {
-      setPasswordValidateError('Password cannot be empty.');
-    } else {
-      try {
-        signUpUserWithEmailAndPassword(values.email, values.password);
-      } catch (error) {
-        const errorCode = error.code;
-        if (errorCode === 'auth/email-already-in-use') {
-          setEmailValidateError(
-            'There already exists an account with this email.'
-          );
-        }
-        if (errorCode === 'auth/invalid-email') {
-          setEmailValidateError('Email address is not valid');
-        }
-        if (errorCode === 'auth/weak-password') {
-          setPasswordValidateError('Password is not strong enough');
-        }
+    try {
+      if (values.email === '' || values.password === '' || !isPasswordStrong) {
+        values.email === ''
+          ? setEmailValidateError('Email cannot be empty.')
+          : setEmailValidateError(null);
+        values.password === ''
+          ? setPasswordValidateError('Password cannot be empty.')
+          : setPasswordValidateError(null);
+        !isPasswordStrong
+          ? setPasswordValidateError('Password is not strong enough.')
+          : setPasswordValidateError(null);
+      } else {
+        await auth.createUserWithEmailAndPassword(
+          values.email,
+          values.password
+        );
+        setEmailValidateError(null);
+        setPasswordValidateError(null);
+      }
+    } catch (error) {
+      const errorCode = error.code;
+      if (errorCode === 'auth/email-already-in-use') {
+        setEmailValidateError(
+          'There already exists an account with this email.'
+        );
+        setPasswordValidateError(null);
+      }
+      if (errorCode === 'auth/invalid-email') {
+        setEmailValidateError('Email address is not valid');
+        setPasswordValidateError(null);
+      }
+      if (errorCode === 'auth/weak-password') {
+        setPasswordValidateError('Password is not strong enough');
       }
     }
   };
@@ -92,7 +103,12 @@ const SignUp = ({ user }) => {
         </div>
 
         <div className={classes.auth}>
-          <Button variant="outlined" color="primary" className={classes.button}>
+          <Button
+            variant="outlined"
+            color="primary"
+            className={classes.button}
+            onClick={signInWithGoogle}
+          >
             Continue wtih Google
           </Button>
         </div>
