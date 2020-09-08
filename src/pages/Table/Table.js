@@ -1,10 +1,9 @@
 import React, { useEffect, useContext } from 'react';
+import { BooksContext } from '../../providers/BooksProvider';
 import MaterialTable from 'material-table';
 import icons from './tableIcons';
-
 import api from '../../utils/api';
-
-import { BooksContext } from '../../providers/BooksProvider';
+import { MediaQuery } from '../../utils/helpers';
 
 const Table = ({ title, table, setTable, tableSetting, type }) => {
   const {
@@ -64,7 +63,11 @@ const Table = ({ title, table, setTable, tableSetting, type }) => {
           exportButton: true,
           actionsColumnIndex: -1,
           loadingType: 'linear',
-          // showTitle: false,
+          showTitle: MediaQuery(),
+          searchFieldAlignment: MediaQuery() ? 'right' : 'left',
+          // paging: false,
+          pageSize: 10,
+          pageSizeOptions: [10, 20, 30, 50, 75, 100],
         }}
         actions={[
           {
