@@ -1,20 +1,25 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
+import Link from '@material-ui/core/Link';
 import MuiDialogContent from '@material-ui/core/DialogContent';
 import { withStyles } from '@material-ui/core/styles';
 import Rating from '@material-ui/lab/Rating';
+import { ToHttps } from '../../utils/helpers';
 
 const parse = require('html-react-parser');
 
 const styles = (theme) => ({
   root: {
     padding: theme.spacing(2),
-    minWidth: '500px',
+    // minWidth: '300px',
     maxWidth: '500px',
   },
 
   cardInfo: {
     display: 'flex',
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+    },
   },
 
   cardDescription: {
@@ -23,6 +28,10 @@ const styles = (theme) => ({
 
   cardInfoLeft: {
     paddingRight: 30,
+    [theme.breakpoints.down('sm')]: {
+      margin: 'auto',
+      paddingRight: 0,
+    },
   },
 
   cardInfoRight: {},
@@ -47,6 +56,7 @@ export const BookDetailContent = withStyles(styles)((props) => {
     ratingsCount,
     description,
     publishedDate,
+    previewLink,
     classes,
     onClose,
     ...other
@@ -57,7 +67,7 @@ export const BookDetailContent = withStyles(styles)((props) => {
       <div className={classes.cardInfo}>
         {thumbnail && (
           <div className={classes.cardInfoLeft}>
-            <img src={thumbnail} alt="book cover" />
+            <img src={ToHttps(thumbnail)} alt={`${title} book cover`} />
           </div>
         )}
 
@@ -87,6 +97,12 @@ export const BookDetailContent = withStyles(styles)((props) => {
           {pageCount !== undefined && (
             <Typography variant="body2" color="textSecondary">
               Published {publishedDate} • {pageCount} pages
+            </Typography>
+          )}
+
+          {previewLink !== undefined && (
+            <Typography variant="body2" color="textSecondary">
+              <Link href={ToHttps(previewLink)}>Preview this book</Link>
             </Typography>
           )}
         </div>
