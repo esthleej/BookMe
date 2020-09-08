@@ -26,11 +26,5 @@ export const signInWithGoogle = () => auth.signInWithPopup(provider);
 export const signOut = () => auth.signOut();
 export const signInWithEmailAndPassword = (email, password) =>
   auth.signInWithEmailAndPassword(email, password);
-export const signUpUserWithEmailAndPassword = (email, password) => {
-  auth.createUserWithEmailAndPassword(email, password);
-};
-export const sendPasswordResetEmail = (email) => {
-  auth.sendPasswordResetEmail(email);
-};
 
 export default firebase;
