@@ -33,6 +33,7 @@ const BookDetail = () => {
     ratingsCount,
     publishedDate,
     thumbnail,
+    previewLink,
   } = bookDetail || {};
 
   const Actions = (type) => {
@@ -78,6 +79,7 @@ const BookDetail = () => {
           description={description}
           ratingsCount={ratingsCount}
           publishedDate={publishedDate}
+          previewLink={previewLink}
         />
         {Actions(type)}
       </Dialog>
