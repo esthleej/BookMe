@@ -28,7 +28,7 @@ const LogIn = () => {
     email: '',
     showPassword: false,
   });
-  const [loginError, setLoginError] = useState(null);
+  const [loginError, setLoginError] = useState({ show: false, message: '' });
 
   let { from } = location.state || { from: { pathname: '/' } };
 
@@ -52,19 +52,34 @@ const LogIn = () => {
   };
 
   const handleLogin = async (event) => {
-    await signInWithEmailAndPassword(values.email, values.password)
-      .then(() => {})
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        if (errorCode === 'auth/too-many-requests') {
-          alert(errorMessage);
-        } else if (errorCode === 'auth/user-not-found') {
-          setLoginError('Email address is not valid');
-        } else {
-          setLoginError('The email or password is incorrect.');
-        }
-      });
+    if (values.email !== '' && values.password !== '') {
+      await signInWithEmailAndPassword(values.email, values.password)
+        .then(() => {
+          setLoginError({ show: false, message: '' });
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          if (errorCode === 'auth/too-many-requests') {
+            alert(errorMessage);
+          } else if (errorCode === 'auth/user-not-found') {
+            setLoginError({
+              show: true,
+              message: 'Email address was not found',
+            });
+          } else if (errorCode === 'auth/invalid-email') {
+            setLoginError({
+              show: true,
+              message: 'Email address is not valid.',
+            });
+          } else {
+            setLoginError({
+              show: true,
+              message: 'The email or password is incorrect.',
+            });
+          }
+        });
+    }
   };
 
   return (
@@ -103,7 +118,7 @@ const LogIn = () => {
             <OutlinedInput
               id="outlined-adornment-email"
               value={values.email}
-              error={loginError}
+              error={loginError.show}
               onChange={handleChange('email')}
               aria-describedby="outlined-email-helper-text"
               inputProps={{
@@ -111,9 +126,9 @@ const LogIn = () => {
               }}
             />
           </FormControl>
-          {loginError && (
+          {loginError.show && (
             <FormHelperText error id="filled-weight-helper-text">
-              {loginError}
+              {loginError.message}
             </FormHelperText>
           )}
         </div>
@@ -169,7 +184,7 @@ const LogIn = () => {
 
         <Divider className={classes.dividerContainer} />
 
-        <Typography span variant="body2" align="center">
+        <Typography variant="body2" align="center">
           Don't have an account?<span>&nbsp;</span>
           <Link
             variant="body2"

@@ -29,8 +29,14 @@ const SignUp = () => {
     showPassword: false,
   });
 
-  const [passwordValidateError, setPasswordValidateError] = useState(null);
-  const [emailValidateError, setEmailValidateError] = useState(null);
+  const [passwordValidateError, setPasswordValidateError] = useState({
+    show: false,
+    message: '',
+  });
+  const [emailValidateError, setEmailValidateError] = useState({
+    show: false,
+    message: '',
+  });
 
   let { from } = location.state || { from: { pathname: '/' } };
 
@@ -61,36 +67,52 @@ const SignUp = () => {
     try {
       if (values.email === '' || values.password === '' || !isPasswordStrong) {
         values.email === ''
-          ? setEmailValidateError('Email cannot be empty.')
-          : setEmailValidateError(null);
+          ? setEmailValidateError({
+              show: true,
+              message: 'Email cannot be empty.',
+            })
+          : setEmailValidateError({ show: false, message: '' });
         values.password === ''
-          ? setPasswordValidateError('Password cannot be empty.')
-          : setPasswordValidateError(null);
+          ? setPasswordValidateError({
+              show: true,
+              message: 'Password cannot be empty.',
+            })
+          : setPasswordValidateError({ show: false, message: '' });
         !isPasswordStrong
-          ? setPasswordValidateError('Password is not strong enough.')
-          : setPasswordValidateError(null);
+          ? setPasswordValidateError({
+              show: true,
+              message: 'Password is not strong enough.',
+            })
+          : setPasswordValidateError({ show: false, message: '' });
       } else {
         await auth.createUserWithEmailAndPassword(
           values.email,
           values.password
         );
-        setEmailValidateError(null);
-        setPasswordValidateError(null);
+        setEmailValidateError({ show: false, message: '' });
+        setPasswordValidateError({ show: false, message: '' });
       }
     } catch (error) {
       const errorCode = error.code;
       if (errorCode === 'auth/email-already-in-use') {
-        setEmailValidateError(
-          'There already exists an account with this email.'
-        );
-        setPasswordValidateError(null);
+        setEmailValidateError({
+          show: true,
+          message: 'There already exists an account with this email.',
+        });
+        setPasswordValidateError({ show: false, message: '' });
       }
       if (errorCode === 'auth/invalid-email') {
-        setEmailValidateError('Email address is not valid');
-        setPasswordValidateError(null);
+        setEmailValidateError({
+          show: true,
+          message: 'Email address is not valid',
+        });
+        setPasswordValidateError({ show: false, message: '' });
       }
       if (errorCode === 'auth/weak-password') {
-        setPasswordValidateError('Password is not strong enough');
+        setPasswordValidateError({
+          show: true,
+          message: 'Password is not strong enough',
+        });
       }
     }
   };
@@ -131,7 +153,7 @@ const SignUp = () => {
             <OutlinedInput
               id="outlined-adornment-email"
               value={values.email}
-              error={emailValidateError}
+              error={emailValidateError.show}
               onChange={handleChange('email')}
               aria-describedby="outlined-email-helper-text"
               inputProps={{
@@ -139,9 +161,9 @@ const SignUp = () => {
               }}
             />
           </FormControl>
-          {emailValidateError && (
+          {emailValidateError.show && (
             <FormHelperText error id="email-error-helper-text">
-              {emailValidateError}
+              {emailValidateError.message}
             </FormHelperText>
           )}
         </div>
@@ -156,7 +178,7 @@ const SignUp = () => {
               id="outlined-adornment-password"
               type={values.showPassword ? 'text' : 'password'}
               value={values.password}
-              error={passwordValidateError}
+              error={passwordValidateError.show}
               onChange={handleChange('password')}
               endAdornment={
                 <InputAdornment position="end">
@@ -172,9 +194,9 @@ const SignUp = () => {
               }
             />
           </FormControl>
-          {passwordValidateError && (
+          {passwordValidateError.show && (
             <FormHelperText error id="password-error-helper-text">
-              {passwordValidateError}
+              {passwordValidateError.message}
             </FormHelperText>
           )}
           <FormHelperText id="password-helper-text">
@@ -195,7 +217,7 @@ const SignUp = () => {
 
         <Divider className={classes.dividerContainer} />
 
-        <Typography span variant="body2" align="center">
+        <Typography variant="body2" align="center">
           Already signed up?<span>&nbsp;</span>
           <Link
             variant="body2"
