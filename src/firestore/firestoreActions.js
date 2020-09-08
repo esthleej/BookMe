@@ -21,8 +21,11 @@ export const collectDocsAndId = (doc) => {
 };
 
 export const addBook = async (collection, book) => {
-  const docRef = await firestore.collection(collection).add(book);
-  return docRef;
+  const docRef = await firestore.collection(collection).doc();
+  docRef.set({
+    ...book,
+    id: docRef.id,
+  });
 };
 
 export const deleteBook = async (collection, id) => {
@@ -33,39 +36,17 @@ export const editBook = async (collection, id, book) => {
   await firestore.doc(`${collection}/${id}`).set({ ...book });
 };
 
-export const moveBook = async (selfLink) => {
-  const bookRef = await firestore
-    .collection('wishList')
-    .where('selfLink', '==', selfLink);
-
-  bookRef.onSnapshot((snapshot) => {
-    snapshot.forEach((doc) => doc.ref.delete());
-  });
+export const moveBook = async (id) => {
+  await firestore.doc(`wishList/${id}`).delete();
 };
 
-export const subscribeBooks = async (setReadingLog, setWishList, uid) => {
-  let readingLog;
-  let wishList;
-  firestore
-    .collection('readingLog')
+export const subscribeList = (collection, setList, uid) => {
+  return firestore
+    .collection(collection)
     .where('userId', '==', uid)
     .onSnapshot((snapshot) => {
-      readingLog = snapshot.docs.map(collectDocsAndId);
-      setReadingLog(readingLog);
-    });
-  firestore
-    .collection('wishList')
-    .where('userId', '==', uid)
-    .onSnapshot((snapshot) => {
-      wishList = snapshot.docs.map(collectDocsAndId);
-      setWishList(wishList);
+      let list;
+      list = snapshot.docs.map(collectDocsAndId);
+      setList(list);
     });
 };
-
-// export const getList = async (collection, uid) => {
-//   const snapshot = await firestore
-//     .collection(collection)
-//     .where('userId', '==', uid)
-//     .get();
-//   return snapshot.docs.map(collectDocsAndId);
-// };

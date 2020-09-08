@@ -2,7 +2,7 @@ import React, { useState, useEffect, createContext, useContext } from 'react';
 import { UserContext } from './UserProvider';
 import SNACKBAR from '../component/SnackBar/snackbarMessages';
 import {
-  subscribeBooks,
+  subscribeList,
   addBook,
   deleteBook,
   editBook,
@@ -23,28 +23,28 @@ const BooksProvider = ({ children }) => {
   const [isSnackbar, setSnackbarVisibility] = useState(false);
   const [type, setType] = useState('');
 
-  const { title, authors = ['N/A'], categories = ['N/A'], selfLink } =
+  const { title, authors = ['N/A'], categories = ['N/A'], selfLink, id } =
     bookDetail || {};
 
   const { uid } = auth.currentUser || {};
 
   useEffect(() => {
-    let unsubscribeFromFirestore;
+    let unsubscribeToReadingLog = null;
+    let unsubscribeToWishList = null;
 
-    async function suscribeFromFirestore() {
-      unsubscribeFromFirestore = await subscribeBooks(
-        setReadingLog,
-        setWishList,
-        uid
-      );
+    async function subscribeToLists() {
+      unsubscribeToReadingLog = subscribeList('readingLog', setReadingLog, uid);
+      unsubscribeToWishList = subscribeList('wishList', setWishList, uid);
     }
+
     if (user && uid) {
-      suscribeFromFirestore();
+      subscribeToLists();
     }
+
     return () => {
-      if (unsubscribeFromFirestore) {
-        unsubscribeFromFirestore();
-        console.log('unsubscribe');
+      if (unsubscribeToReadingLog || unsubscribeToWishList) {
+        unsubscribeToReadingLog();
+        unsubscribeToWishList();
       }
     };
   }, [user, uid]);
@@ -110,7 +110,7 @@ const BooksProvider = ({ children }) => {
     if (user) {
       try {
         await addBook('readingLog', { ...newBook, userId: uid });
-        moveBook(selfLink);
+        moveBook(id);
 
         setSnackbar(SNACKBAR.MOVE_TO_READING_LOGS.SUCCESS);
       } catch {
@@ -137,7 +137,6 @@ const BooksProvider = ({ children }) => {
         endDate: newData.endDate === '' ? '' : new Date(newData.endDate),
       };
     }
-
     if (user) {
       let newBook = {
         ...newData,
