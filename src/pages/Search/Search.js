@@ -16,8 +16,7 @@ const Search = () => {
   const { setType } = useContext(BooksContext);
 
   useEffect(() => {
-    const type = location.pathname;
-    setType(type);
+    setType('search');
   }, [location, setType]);
 
   const handleSubmit = (event) => {

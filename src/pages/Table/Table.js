@@ -1,5 +1,4 @@
 import React, { useEffect, useContext } from 'react';
-import { useLocation } from 'react-router-dom';
 import MaterialTable from 'material-table';
 import icons from './tableIcons';
 
@@ -8,7 +7,6 @@ import api from '../../utils/api';
 import { BooksContext } from '../../providers/BooksProvider';
 
 const Table = ({ title, table, setTable, tableSetting, type }) => {
-  const location = useLocation();
   const {
     setType,
     setBookDetail,
@@ -18,10 +16,10 @@ const Table = ({ title, table, setTable, tableSetting, type }) => {
   } = useContext(BooksContext);
 
   useEffect(() => {
-    setType(location.pathname);
-  }, [location, setType]);
+    setType(type);
+  }, [type, setType]);
 
-  const handleBookDetail = (url) => {
+  const handleBookDetail = (url, id) => {
     api
       .getBookDetail(url)
       .then((res) => {
@@ -33,7 +31,7 @@ const Table = ({ title, table, setTable, tableSetting, type }) => {
         } else {
           thumbnail = false;
         }
-        setBookDetail({ ...volumeInfo, thumbnail, selfLink });
+        setBookDetail({ ...volumeInfo, thumbnail, selfLink, id });
         setBookDetailVisibility(true);
       })
       .catch((err) => console.error(err));
@@ -73,7 +71,7 @@ const Table = ({ title, table, setTable, tableSetting, type }) => {
             icon: icons.ImportContactsIcon,
             tooltip: 'Book Detail',
             onClick: (event, rowData) => {
-              handleBookDetail(rowData.selfLink);
+              handleBookDetail(rowData.selfLink, rowData.id || '');
             },
           },
         ]}

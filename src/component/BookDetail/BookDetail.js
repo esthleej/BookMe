@@ -37,7 +37,7 @@ const BookDetail = () => {
 
   const Actions = (type) => {
     switch (type) {
-      case '/':
+      case 'search':
         return (
           <DialogActions>
             <Button autoFocus onClick={addReadingLog} color="primary">
@@ -48,7 +48,7 @@ const BookDetail = () => {
             </Button>
           </DialogActions>
         );
-      case '/wishlist':
+      case 'wishList':
         return (
           <DialogActions>
             <Button autoFocus onClick={moveWishToRead} color="primary">
