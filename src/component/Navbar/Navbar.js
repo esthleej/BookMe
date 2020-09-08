@@ -9,12 +9,19 @@ import HomeIcon from '@material-ui/icons/Home';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import AcUnitIcon from '@material-ui/icons/AcUnit';
 import { makeStyles } from '@material-ui/core/styles';
+import { BooksContext } from '../../providers/BooksProvider';
 
-const Navbar = ({ loading }) => {
-  const { user } = useContext(UserContext);
+const Navbar = () => {
+  const { user, setUser } = useContext(UserContext);
+  const { setReadingLog, setWishList } = useContext(BooksContext);
   const classes = useStyles();
 
-  if (loading) return null;
+  const handleSignOut = () => {
+    setReadingLog([]);
+    setWishList([]);
+    signOut();
+    setUser(null);
+  };
 
   return (
     <div className={classes.navbarContainer}>
@@ -60,7 +67,7 @@ const Navbar = ({ loading }) => {
               variant="contained"
               color="primary"
               size="small"
-              onClick={signOut}
+              onClick={handleSignOut}
               className={classes.button}
             >
               Sign Out
