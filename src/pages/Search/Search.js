@@ -45,7 +45,7 @@ const Search = () => {
           <form className={classes.form} onSubmit={handleSubmit}>
             <TextField
               className={classes.textField}
-              aria-describedby="search-field"
+              aria-describedby="search-book-field"
               id="search-book-field"
               onChange={(event) => setTerm(event.target.value)}
               value={term}

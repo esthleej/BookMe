@@ -7,6 +7,7 @@ export const readingLogTable = [
     field: 'startDate',
     type: 'date',
     editable: 'onUpdate',
+    defaultSort: 'desc',
   },
   { title: 'End Date', field: 'endDate', type: 'date', editable: 'onUpdate' },
 ];
