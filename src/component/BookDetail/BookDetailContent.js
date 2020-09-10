@@ -2,9 +2,11 @@ import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import MuiDialogContent from '@material-ui/core/DialogContent';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 import { withStyles } from '@material-ui/core/styles';
 import Rating from '@material-ui/lab/Rating';
-import { ToHttps } from '../../utils/helpers';
+import { ToHttps, MediaQuery } from '../../utils/helpers';
 
 const parse = require('html-react-parser');
 
@@ -13,11 +15,23 @@ const styles = (theme) => ({
     padding: theme.spacing(2),
     // minWidth: '300px',
     maxWidth: '500px',
+    [theme.breakpoints.down('xs')]: {
+      padding: '10px 16px 16px 16px !important',
+    },
+  },
+
+  closeBtnContainer: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+  },
+
+  closeBtn: {
+    padding: 0,
   },
 
   cardInfo: {
     display: 'flex',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('xs')]: {
       flexDirection: 'column',
     },
   },
@@ -28,7 +42,7 @@ const styles = (theme) => ({
 
   cardInfoLeft: {
     paddingRight: 30,
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('xs')]: {
       margin: 'auto',
       paddingRight: 0,
     },
@@ -48,6 +62,7 @@ const styles = (theme) => ({
 
 export const BookDetailContent = withStyles(styles)((props) => {
   const {
+    handleClose,
     title,
     thumbnail,
     authors,
@@ -62,8 +77,22 @@ export const BookDetailContent = withStyles(styles)((props) => {
     ...other
   } = props;
 
+  const showCloseBtn = !MediaQuery(599);
+
   return (
     <MuiDialogContent className={classes.root} {...other}>
+      {showCloseBtn && (
+        <div className={classes.closeBtnContainer}>
+          <IconButton
+            aria-label="close"
+            className={classes.closeBtn}
+            onClick={handleClose}
+          >
+            <CloseIcon />
+          </IconButton>
+        </div>
+      )}
+
       <div className={classes.cardInfo}>
         {thumbnail && (
           <div className={classes.cardInfoLeft}>

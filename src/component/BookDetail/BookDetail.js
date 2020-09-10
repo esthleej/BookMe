@@ -5,6 +5,7 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import MuiDialogActions from '@material-ui/core/DialogActions';
 import { withStyles } from '@material-ui/core/styles';
+import { MediaQuery } from '../../utils/helpers';
 
 const DialogActions = withStyles((theme) => ({
   root: {
@@ -36,6 +37,12 @@ const BookDetail = () => {
     previewLink,
   } = bookDetail || {};
 
+  const disableCloseBtn = MediaQuery(599);
+
+  const handleClose = () => {
+    setBookDetailVisibility(false);
+  };
+
   const Actions = (type) => {
     switch (type) {
       case 'search':
@@ -65,7 +72,7 @@ const BookDetail = () => {
   return (
     <div>
       <Dialog
-        onClose={() => setBookDetailVisibility(false)}
+        onClose={disableCloseBtn && handleClose}
         aria-labelledby="customized-dialog-title"
         open={isBookDetail}
       >
@@ -80,6 +87,7 @@ const BookDetail = () => {
           ratingsCount={ratingsCount}
           publishedDate={publishedDate}
           previewLink={previewLink}
+          handleClose={handleClose}
         />
         {Actions(type)}
       </Dialog>
