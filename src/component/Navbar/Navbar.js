@@ -22,6 +22,7 @@ const Navbar = () => {
   const classes = useStyles();
   const history = useHistory();
   const location = useLocation().pathname;
+  const isDesktopView = MediaQuery(514);
 
   const [openMenu, setOpenMenu] = React.useState(null);
 
@@ -48,7 +49,7 @@ const Navbar = () => {
   return (
     <div className={classes.navbarContainer}>
       <div className={classes.navbarLeft}>
-        {MediaQuery() ? (
+        {isDesktopView ? (
           <Breadcrumbs aria-label="breadcrumb">
             <Link
               color="textPrimary"

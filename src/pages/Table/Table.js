@@ -14,6 +14,8 @@ const Table = ({ title, table, setTable, tableSetting, type }) => {
     setBookDetailVisibility,
   } = useContext(BooksContext);
 
+  const isDesktopView = MediaQuery(514);
+
   useEffect(() => {
     setType(type);
   }, [type, setType]);
@@ -63,8 +65,8 @@ const Table = ({ title, table, setTable, tableSetting, type }) => {
           exportButton: true,
           actionsColumnIndex: -1,
           loadingType: 'linear',
-          showTitle: MediaQuery(),
-          searchFieldAlignment: MediaQuery() ? 'right' : 'left',
+          showTitle: isDesktopView,
+          searchFieldAlignment: isDesktopView ? 'right' : 'left',
           // paging: false,
           pageSize: 10,
           pageSizeOptions: [10, 20, 30, 50, 75, 100],
