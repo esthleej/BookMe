@@ -1,7 +1,7 @@
 import React, { useContext, Fragment } from 'react';
 import { BooksContext } from '../../providers/BooksProvider';
 import { makeStyles } from '@material-ui/core/styles';
-import { ToHttps } from '../../utils/helpers';
+import { toHttps } from '../../utils/helpers';
 
 const Books = ({ books }) => {
   const classes = useStyles();
@@ -26,7 +26,7 @@ const Books = ({ books }) => {
         <div className={classes.book} onClick={handleBookDetail}>
           <div className={classes.bookCover}>
             {thumbnail && (
-              <img src={ToHttps(thumbnail)} alt="book cover" height="40" />
+              <img src={toHttps(thumbnail)} alt="book cover" height="40" />
             )}
           </div>
           <div className={classes.bookTitle}>{title}</div>

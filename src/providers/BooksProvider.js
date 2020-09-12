@@ -62,9 +62,7 @@ const BooksProvider = ({ children }) => {
       try {
         await addBook('readingLog', { ...newBook, userId: uid });
         setSnackbar(SNACKBAR.ADD_TO_READING_LOGS.SUCCESS);
-      } catch (error) {
-        // setSnackbar(SNACKBAR.ADD_TO_READING_LOGS.ERROR);
-      }
+      } catch (error) {}
     } else {
       setReadingLog([...readingLog, newBook]);
       setSnackbar(SNACKBAR.CREATE_ACCOUNT_TO_SAVE.SUCCESS);
@@ -86,9 +84,7 @@ const BooksProvider = ({ children }) => {
       try {
         await addBook('wishList', { ...newBook, userId: uid });
         setSnackbar(SNACKBAR.ADD_TO_WISH_LIST.SUCCESS);
-      } catch (error) {
-        // setSnackbar(SNACKBAR.ADD_TO_WISH_LIST.ERROR);
-      }
+      } catch (error) {}
     } else {
       setWishList([...wishList, newBook]);
       setSnackbar(SNACKBAR.CREATE_ACCOUNT_TO_SAVE.SUCCESS);
@@ -113,9 +109,7 @@ const BooksProvider = ({ children }) => {
         moveBook(id);
 
         setSnackbar(SNACKBAR.MOVE_TO_READING_LOGS.SUCCESS);
-      } catch {
-        // setSnackbar(SNACKBAR.MOVE_TO_READING_LOGS.ERROR);
-      }
+      } catch {}
     } else {
       const newList = wishList.filter((item) => {
         return item.selfLink !== selfLink;

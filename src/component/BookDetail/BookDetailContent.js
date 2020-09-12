@@ -6,14 +6,13 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import { withStyles } from '@material-ui/core/styles';
 import Rating from '@material-ui/lab/Rating';
-import { ToHttps, MediaQuery } from '../../utils/helpers';
+import { toHttps, MediaQuery } from '../../utils/helpers';
 
 const parse = require('html-react-parser');
 
 const styles = (theme) => ({
   root: {
     padding: theme.spacing(2),
-    // minWidth: '300px',
     maxWidth: '500px',
     [theme.breakpoints.down('xs')]: {
       padding: '10px 16px 16px 16px !important',
@@ -96,7 +95,7 @@ export const BookDetailContent = withStyles(styles)((props) => {
       <div className={classes.cardInfo}>
         {thumbnail && (
           <div className={classes.cardInfoLeft}>
-            <img src={ToHttps(thumbnail)} alt={`${title} book cover`} />
+            <img src={toHttps(thumbnail)} alt={`${title} book cover`} />
           </div>
         )}
 
@@ -118,7 +117,7 @@ export const BookDetailContent = withStyles(styles)((props) => {
                 variant="caption"
                 className={classes.cardRatingText}
               >
-                {averageRating} • {ratingsCount} ratingse
+                {averageRating} • {ratingsCount} ratings
               </Typography>
             </div>
           )}
@@ -131,7 +130,7 @@ export const BookDetailContent = withStyles(styles)((props) => {
 
           {previewLink !== undefined && (
             <Typography variant="body2" color="textSecondary">
-              <Link href={ToHttps(previewLink)}>Preview this book</Link>
+              <Link href={toHttps(previewLink)}>Preview this book</Link>
             </Typography>
           )}
         </div>

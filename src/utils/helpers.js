@@ -10,6 +10,6 @@ export const MediaQuery = (minWidth) => {
   return matches;
 };
 
-export const ToHttps = (url) => {
+export const toHttps = (url) => {
   return url.replace(/^http:\/\//i, 'https://');
 };
