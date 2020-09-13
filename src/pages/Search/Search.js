@@ -1,10 +1,10 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import Books from '../../component/Books/Books';
-
+import { ReactComponent as SVG } from '../../images/BookLover.svg';
+import Typography from '@material-ui/core/Typography';
 import { TextField, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-
 import api from '../../utils/api';
 import { BooksContext } from '../../providers/BooksProvider';
 
@@ -41,7 +41,10 @@ const Search = () => {
     <>
       <div className={classes.container}>
         <div className={classes.formContainer}>
-          <h1 className={classes.h1}>Book Finder</h1>
+          <SVG className={classes.svg} />
+          <Typography variant="h5" className={classes.title}>
+            Book Finder
+          </Typography>
           <form className={classes.form} onSubmit={handleSubmit}>
             <TextField
               className={classes.textField}
@@ -82,6 +85,8 @@ const useStyles = makeStyles((theme) => ({
   },
 
   formContainer: {
+    display: 'flex',
+    flexDirection: 'column',
     width: 500,
     minWidth: 300,
     padding: '20px',
@@ -106,8 +111,16 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
   },
 
-  h1: {
+  title: {
     textAlign: 'center',
     fontWeight: 300,
+    paddingBottom: 4,
+  },
+
+  svg: {
+    height: 200,
+    width: 200,
+    margin: 'auto',
+    // paddingBottom: 4,
   },
 }));
