@@ -11,14 +11,14 @@
     "@testing-library/user-event": "^7.1.2",
     "axios": "^0.20.0",
     "dotenv": "^8.2.0",
-    "firebase": "^7.19.1",
+    "firebase": "^8.0.2",
     "html-react-parser": "^0.13.0",
     "json2mq": "^0.2.0",
     "material-table": "1.68.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "3.4.3"
+    "react-scripts": "^4.0.0"
   },
   "scripts": {
     "start": "react-scripts start",
